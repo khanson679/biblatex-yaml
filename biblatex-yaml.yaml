@@ -1,0 +1,112 @@
+"$schema": "http://json-schema.org/draft-04/schema#"
+
+title: BiblatexYAMLDatabase
+description:
+    Schema for a bibliographic database utilizing the Biblatex data model and stored in YAML format.
+    Fundamentally similar to a BibTeX format file, but with some extensions.
+    Several existing projects support such a format, but there are no standards or schemas available.
+type: object
+
+properties:
+    people:
+        type: object
+        additionalProperties: {$ref: "#/definitions/PersonEntry"}
+
+    xdata:
+        type: object
+        properties:
+            additionalProperties: {$ref: "#/definitions/BibEntry"}
+
+    entries:
+        type: object
+        additionalProperties: {$ref: "#/definitions/BibEntry"}
+
+definitions:
+    PersonEntry:
+        type: object
+        properties:
+            first:      {type: string}
+            middle:     {type: string}
+            last:       {type: string}
+            lineage:    {type: string}
+            url:        {type: string}
+            ids:
+                type: object
+                properties:
+                    orcid: {type: string}
+        additionalProperties: false
+
+    PersonList:
+        type: array
+        items: {$ref: "#/definitions/PersonEntry"}
+
+    EntryType:
+        type: string
+        enum:
+            - article
+            - book
+            - mvbook
+            - thesis
+            - xdata
+
+    XDataType:
+        description:
+            The type of a Biblatex XData entry.
+            In a BibTeX file the type is always XData, so we use another field to store the logical type.
+            Note that some of these are similar but not identical to actual Biblatex types, because of the way XData inheritance works.
+        type: string
+        enum:
+            - institution
+            - periodical
+            - periodical_issue
+            - publisher
+
+    BibEntry:
+        type: object
+        properties:
+            type:           {$ref: "#/definitions/EntryType"}
+
+            #biblatex fields
+            abstract:       {type: string}
+            author:         {$ref: "#/definitions/PersonList"}
+            crossref:       {type: string}
+            date:           {type: string}
+            doi:            {type: string}
+            editor:         {$ref: "#/definitions/PersonList"}
+            eprint:         {type: string}
+            eprinttype:     {type: string}
+            ids:            {type: string}
+            indexsorttitle: {type: string}
+            indextitle:     {type: string}
+            institution:    {type: string}
+            isbn:           {type: string}
+            issn:           {type: string}
+            issue:          {type: string}
+            issuesubtitle:  {type: string}
+            issuetitle:     {type: string}
+            journalsubtitle: {type: string}
+            journaltitle:   {type: string}
+            keywords:       {type: string}
+            langid:         {type: string}
+            location:       {type: string}
+            mainsubtitle:   {type: string}
+            maintitle:      {type: string}
+            number:         {type: string}
+            pages:          {type: string}
+            pagetotal:      {type: number}
+            publisher:      {type: string}
+            series:         {type: string}
+            shortjournal:   {type: string}
+            shorttitle:     {type: string}
+            sortname:       {type: string}
+            subtitle:       {type: string}
+            title:          {type: string}
+            volume:         {type: number}
+            volumes:        {type: number} 
+            xdata:          {type: string}
+
+            # lingbib-specific fields
+            keyoverride:    {type: string}
+            titlekeyword:   {type: string}
+            xdatatype:      {$ref: "#/definitions/XDataType"}
+        additionalProperties: false   
